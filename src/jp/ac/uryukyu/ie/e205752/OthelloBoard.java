@@ -42,6 +42,23 @@ class OthelloBoard {
             isPlayerTurn = false;
         }
 
+        // 各ターンの処理
+        System.out.println("オセロを始めます。");
+        int playerDiscNum;
+        int otherDiscNum;
+        while (this.turnCounter <= turnCounterMax) {
+            // 現時点での石の数を表示する
+            playerDiscNum = this.countDisc(this.playerColor);
+            otherDiscNum = this.countDisc(this.otherColor);
+            System.out.print("あなた = " + playerDiscNum + "  ");
+            System.out.println("相手 = " + otherDiscNum);
+            if (isPlayerTurn) {
+                // プレイヤーのターン
+                // プレイヤーが石をおけるかどうか判定する
+                if (! this.checkSquaresForNewDisc(this.playerColor, this.otherColor)) {
+                    // プレイヤーのターンはスキップされる
+                    System.out.println("あなたのターンはスキップされました。");
+
     // オセロ盤をコンソール上に表示する
     private void printBoard() {
         this.printBoardAlphabetLine(); // アルファベット行

@@ -94,6 +94,20 @@ class OthelloBoard {
             isPlayerTurn = !isPlayerTurn;
         }
 
+        // 勝敗の判定
+        playerDiscNum = this.countDisc(this.playerColor);
+        otherDiscNum = this.countDisc(this.otherColor);
+        System.out.print("あなた = " + playerDiscNum + "  ");
+        System.out.println("相手 = " + otherDiscNum);
+        if (playerDiscNum > otherDiscNum) {
+            System.out.println("あなたの勝ちです。");
+        } else if (playerDiscNum == otherDiscNum) {
+            System.out.println("引き分けです。");
+        } else {
+            System.out.println("あなたの負けです。");
+        }
+    }
+
     // オセロ盤をコンソール上に表示する
     private void printBoard() {
         this.printBoardAlphabetLine(); // アルファベット行

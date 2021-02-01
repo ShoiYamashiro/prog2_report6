@@ -108,48 +108,65 @@ class OthelloBoard {
         }
     }
 
-    // オセロ盤をコンソール上に表示する
-    private void printBoard() {
-        this.printBoardAlphabetLine(); // アルファベット行
-        this.printBoardOtherLine("┏", "┳", "┓"); // 上端
-        for (int y = 0; y < this.size - 1; y++) {
-            this.printBoardDiscLine(y); // 石を表示する行
-            this.printBoardOtherLine("┣", "╋", "┫"); // 行間の枠
-        }
-        this.printBoardDiscLine(this.size - 1); // 石を表示する行
-        this.printBoardOtherLine("┗", "┻", "┛"); // 下端
-    }
-
-    // オセロ盤の列を示すアルファベットを表示する
-    private void printBoardAlphabetLine() {
-        String buf = "  ";
-        for (int x = 0; x < this.size; x++) {
-            buf += "   " + this.alphabets.charAt(x);
-        }
-        System.out.println(buf);
-    }
-
-    // オセロ盤の石がある行を1行分表示する
-    private void printBoardDiscLine(int y) {
-        String buf = String.format("%2d┃", y + 1);
-        for (int x = 0; x < this.size; x++) {
+    // 石をひっくり返す
+    public void turnOverDiscs(ArrayList<Coordinates> discs) {
+        for (int i = 0; i < discs.size(); i++) {
+            int x = discs.get(i).x;
+            int y = discs.get(i).y;
             if (this.squares[y][x] == 'B') {
-                buf += "●┃";
+                this.squares[y][x] = 'W';
             } else if (this.squares[y][x] == 'W') {
-                buf += "○┃";
-            } else {
-                buf += "　┃";
+                this.squares[y][x] = 'B';
             }
         }
-        System.out.println(buf);
     }
 
-    // オセロ盤の枠を表す罫線を1行分表示する
-private void printBoardOtherLine(String left, String middle, String right) {
-    String buf = "  " + left;
-    for (int x = 0; x < this.size - 1; x ++) {
-        buf += "━" + middle;
+    // 石を置ける場所(他の石をひっくり返せる場所)があるかどうか判定する
+    private boolean checkSquaresForNewDisc(char myColor, char enemyColor) {
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                if (this.squares[y][x] != 'N') {
+                    continue;
+                }
+                ArrayList<Coordinates> discs = this.checkDiscsTurnedOverAllLine(myColor, enemyColor,
+                        new Coordinates(x, y), 1);
+                if (discs.size() >= 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    System.out.println(buf + "━" + right);
-}
-}
+
+    // 石を置く場所が決まるまで入力を受け付ける
+    private void askNewCoordinates(char myColor, char enemyColor) {
+        while (true) {
+            // 入力
+            System.out.println("\n石を置く場所を決めてください。");
+            System.out.println("[x座標 y座標](例 a 1)：");
+            Scanner sc = new Scanner(System.in);
+            // オセロ盤の範囲内かどうか判定する
+            Coordinates newDisc = this.checkCoordinatesRange(sc.nextLine());
+            if (newDisc.equals(-1, -1)) {
+                // 座標が正しくない場合、再度入力させる
+                System.out.println("入力が間違っています。");
+                continue;
+            }
+            if (this.squares[newDisc.y][newDisc.x] != 'N') {
+                // すでに石が置かれている場合、再度入力させる
+                System.out.println("すでに石があります。");
+                continue;
+            }
+            // 相手の石をひっくり返せるかどうか判定する
+            ArrayList<Coordinates> discs = this.checkDiscsTurnedOverAllLine(
+                myColor, enemyColor, newDisc, this.size*this.size);
+            if (! discs.isEmpty()) {
+                // ひっくり返せる石がある場合、実際に石をひっくり返す
+                this.putDisc(myColor, newDisc);
+                this.turnOverDiscs(discs);
+                this.printDiscsTurnedOver(discs);
+                return;
+            }
+            System.out.println("相手の石をひっくり返せません。");
+        }
+    }

@@ -1,5 +1,8 @@
 package jp.ac.uryukyu.ie.e205752;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  * オセロの処理をするクラス 
  * オセロ盤の一辺(8, 10, 12, 14, 16)
@@ -16,6 +19,12 @@ class OthelloBoard {
     private int turnCounter;
     private final String alphabets = "abcdefghijklmnop";
 
+    // コンストラクタ
+    public OthelloBoard() {
+        this.size = 8;
+        // this.size = askBoardSize();
+        this.squares = new char[this.size][this.size];
+    }
 
     // オセロ盤をコンソール上に表示する
     private void printBoard() {

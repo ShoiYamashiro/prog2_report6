@@ -10,21 +10,14 @@ class OthelloBoardTest {
     }
 }
 
-/**
- * オセロの処理をするクラス 
- * オセロ盤の一辺(8, 10, 12, 14, 16)
- * 各マスの状態(B:黒, W:白, N:石なし)
- * プレイヤーの石の色
- * 相手の石の色
- * ターンを数える
- */
 class OthelloBoard {
-    private int size;
-    private char[][] squares;
-    private char playerColor;
-    private char otherColor;
-    private int turnCounter;
+    private int size; // オセロ盤の一辺(8, 10, 12, 14, 16)
+    private char[][] squares; // 各マスの状態(B:黒, W:白, N:石なし)
+    private char playerColor; // プレイヤーの石の色
+    private char otherColor; // 相手の石の色
+    private int turnCounter; // ターン数を数える
     private final String alphabets = "abcdefghijklmnop";
+    // 横方向の座標を示すアルファベット
 
     // コンストラクタ
     public OthelloBoard() {
@@ -41,14 +34,13 @@ class OthelloBoard {
         this.initializeBoard();
         this.printBoard();
         this.turnCounter = 1;
-        int turnCounterMax = this.size*this.size - 4;
+        int turnCounterMax = this.size * this.size - 4;
         int skipCounter = 0;
         // 先手がどちらかを決める
         boolean isPlayerTurn = true;
         if (this.playerColor == 'W') {
             isPlayerTurn = false;
         }
-
         // 各ターンの処理
         System.out.println("オセロを始めます。");
         int playerDiscNum;
@@ -62,15 +54,15 @@ class OthelloBoard {
             if (isPlayerTurn) {
                 // プレイヤーのターン
                 // プレイヤーが石をおけるかどうか判定する
-                if (! this.checkSquaresForNewDisc(this.playerColor, this.otherColor)) {
+                if (!this.checkSquaresForNewDisc(this.playerColor, this.otherColor)) {
                     // プレイヤーのターンはスキップされる
                     System.out.println("あなたのターンはスキップされました。");
-                   if (skipCounter == 1) {
+                    if (skipCounter == 1) {
                         // すでに相手のターンもスキップされていた場合、ゲーム終了
                         break;
                     }
                     isPlayerTurn = !isPlayerTurn;
-                    skipCounter ++;
+                    skipCounter++;
                     continue;
                 }
                 System.out.println("Turn " + turnCounter + ":あなたのターンです。");
@@ -79,7 +71,7 @@ class OthelloBoard {
             } else {
                 // 相手のターン
                 // 相手が石をおけるかどうか判定する
-                if (! this.checkSquaresForNewDisc(this.otherColor, this.playerColor)) {
+                if (!this.checkSquaresForNewDisc(this.otherColor, this.playerColor)) {
                     // プレイヤーのターンはスキップされる
                     System.out.println("相手のターンはスキップされました。");
                     if (skipCounter == 1) {
@@ -87,7 +79,7 @@ class OthelloBoard {
                         break;
                     }
                     isPlayerTurn = !isPlayerTurn;
-                    skipCounter ++;
+                    skipCounter++;
                     continue;
                 }
                 // 相手のターン
@@ -97,10 +89,9 @@ class OthelloBoard {
             }
             this.printBoard();
             // 次ターンに向けての処理
-            this.turnCounter ++;
+            this.turnCounter++;
             isPlayerTurn = !isPlayerTurn;
         }
-
         // 勝敗の判定
         playerDiscNum = this.countDisc(this.playerColor);
         otherDiscNum = this.countDisc(this.otherColor);
@@ -165,9 +156,9 @@ class OthelloBoard {
                 continue;
             }
             // 相手の石をひっくり返せるかどうか判定する
-            ArrayList<Coordinates> discs = this.checkDiscsTurnedOverAllLine(
-                myColor, enemyColor, newDisc, this.size*this.size);
-            if (! discs.isEmpty()) {
+            ArrayList<Coordinates> discs = this.checkDiscsTurnedOverAllLine(myColor, enemyColor, newDisc,
+                    this.size * this.size);
+            if (!discs.isEmpty()) {
                 // ひっくり返せる石がある場合、実際に石をひっくり返す
                 this.putDisc(myColor, newDisc);
                 this.turnOverDiscs(discs);
@@ -222,9 +213,8 @@ class OthelloBoard {
     // 入力された座標の石が相手の石をひっくり返せるかどうか判定する
     // 引数directionによりスキャンする向きが変わる
     // 0:0度, 1:45度, 2:90度, 3:135度, 4:180度, 5:225度, 6:270度, 7:315度
-    private ArrayList<Coordinates> checkDiscsTurnedOverOneLine(
-        char myColor, char enemyColor, Coordinates myCoordinates, int direction)
-    {
+    private ArrayList<Coordinates> checkDiscsTurnedOverOneLine(char myColor, char enemyColor, Coordinates myCoordinates,
+            int direction) {
         // ひっくり返せる石をスキャンする
         Coordinates currentCoordinates = new Coordinates(myCoordinates);
         ArrayList<Coordinates> discs = new ArrayList<Coordinates>();
@@ -333,16 +323,16 @@ class OthelloBoard {
 
     // オセロ盤を開始直後の状態にする
     private void initializeBoard() {
-        for (int y = 0; y < this.size; y ++) {
-            for (int x = 0; x < this.size; x ++) {
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
                 squares[y][x] = 'N';
             }
         }
         // 中央4マスだけに石を置く
-        this.putDisc('B', this.size/2 - 1, this.size/2 - 1);
-        this.putDisc('B', this.size/2, this.size/2);
-        this.putDisc('W', this.size/2, this.size/2 - 1);
-        this.putDisc('W', this.size/2 - 1, this.size/2);
+        this.putDisc('B', this.size / 2 - 1, this.size / 2 - 1);
+        this.putDisc('B', this.size / 2, this.size / 2);
+        this.putDisc('W', this.size / 2, this.size / 2 - 1);
+        this.putDisc('W', this.size / 2 - 1, this.size / 2);
     }
 
     // オセロ盤の指定された座標に石を置く

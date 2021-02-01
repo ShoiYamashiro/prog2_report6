@@ -26,6 +26,22 @@ class OthelloBoard {
         this.squares = new char[this.size][this.size];
     }
 
+    // オセロを開始する
+    public void start() {
+        // プレイヤーの石を決める
+        this.askPlayerColor();
+        // オセロ盤を開始直後の状態にする
+        this.initializeBoard();
+        this.printBoard();
+        this.turnCounter = 1;
+        int turnCounterMax = this.size*this.size - 4;
+        int skipCounter = 0;
+        // 先手がどちらかを決める
+        boolean isPlayerTurn = true;
+        if (this.playerColor == 'W') {
+            isPlayerTurn = false;
+        }
+
     // オセロ盤をコンソール上に表示する
     private void printBoard() {
         this.printBoardAlphabetLine(); // アルファベット行

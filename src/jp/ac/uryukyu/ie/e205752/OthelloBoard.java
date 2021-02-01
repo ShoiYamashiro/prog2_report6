@@ -58,6 +58,41 @@ class OthelloBoard {
                 if (! this.checkSquaresForNewDisc(this.playerColor, this.otherColor)) {
                     // プレイヤーのターンはスキップされる
                     System.out.println("あなたのターンはスキップされました。");
+                   if (skipCounter == 1) {
+                        // すでに相手のターンもスキップされていた場合、ゲーム終了
+                        break;
+                    }
+                    isPlayerTurn = !isPlayerTurn;
+                    skipCounter ++;
+                    continue;
+                }
+                System.out.println("Turn " + turnCounter + ":あなたのターンです。");
+                skipCounter = 0;
+                this.askNewCoordinates(this.playerColor, this.otherColor);
+            } else {
+                // 相手のターン
+                // 相手が石をおけるかどうか判定する
+                if (! this.checkSquaresForNewDisc(this.otherColor, this.playerColor)) {
+                    // プレイヤーのターンはスキップされる
+                    System.out.println("相手のターンはスキップされました。");
+                    if (skipCounter == 1) {
+                        // すでにプレイヤーのターンもスキップされていた場合、ゲーム終了
+                        break;
+                    }
+                    isPlayerTurn = !isPlayerTurn;
+                    skipCounter ++;
+                    continue;
+                }
+                // 相手のターン
+                System.out.println("Turn " + turnCounter + ":相手のターンです。");
+                skipCounter = 0;
+                this.askNewCoordinates(this.otherColor, this.playerColor);
+            }
+            this.printBoard();
+            // 次ターンに向けての処理
+            this.turnCounter ++;
+            isPlayerTurn = !isPlayerTurn;
+        }
 
     // オセロ盤をコンソール上に表示する
     private void printBoard() {
